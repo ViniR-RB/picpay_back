@@ -1,9 +1,12 @@
-import { JwtVerifyPayload } from '@/core/interface/jwt.payload';
-import JsonWebTokenService from '@/core/services/json_web_token.service';
+import JwtVerifyPayload from '@/modules/auth/domain/entities/jwt_verify_payload';
 import IExtractUserUseCase, {
   ExtractUserParam,
 } from '@/modules/auth/domain/usecase/i_extract_user_use_case';
-import { EXTRACT_USER_SERVICE } from '@/modules/auth/symbols';
+import JsonWebTokenService from '@/modules/auth/infra/services/json_web_token.service';
+import {
+  EXTRACT_USER_SERVICE,
+  JWT_TOKEN_SERVICE,
+} from '@/modules/auth/symbols';
 import UserDto from '@/modules/users/dtos/user.dto';
 import {
   CanActivate,
@@ -19,6 +22,7 @@ import { Request } from 'express';
 @Injectable()
 export default class AuthGuard implements CanActivate {
   constructor(
+    @Inject(JWT_TOKEN_SERVICE)
     private readonly jwtService: JsonWebTokenService,
     @Inject(forwardRef(() => EXTRACT_USER_SERVICE))
     private readonly extractUserService: IExtractUserUseCase,

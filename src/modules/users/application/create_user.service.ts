@@ -1,9 +1,9 @@
 import ErrorMessages from '@/core/constants/error_messages';
 import AppException from '@/core/exceptions/app_exception';
 import ServiceException from '@/core/exceptions/service.exception';
-import { IEncryptionService } from '@/core/services/encryption.service';
 import AsyncResult from '@/core/types/async_result';
 import { left, right } from '@/core/types/either';
+import IEncryptionService from '@/modules/auth/adapters/encryption_service.interface';
 import IUserRepository from '@/modules/users/adapters/i_user.repository';
 import UserEntity from '@/modules/users/domain/entities/user.entity';
 import ICreateUserUseCase, {
