@@ -1,11 +1,12 @@
 import ErrorMessages from '@/core/constants/error_messages';
 import AppException from '@/core/exceptions/app_exception';
 import ServiceException from '@/core/exceptions/service.exception';
-import { IEncryptionService } from '@/core/services/encryption.service';
-import JsonWebTokenService from '@/core/services/json_web_token.service';
 import AsyncResult from '@/core/types/async_result';
 import { left, right } from '@/core/types/either';
+import IEncryptionService from '@/modules/auth/adapters/encryption_service.interface';
+import IJwtTokenService from '@/modules/auth/adapters/jwt_token_service.interface';
 import AuthTokenEntity from '@/modules/auth/domain/entities/auth_token.entity';
+
 import ILoginUseCase, {
   LoginParam,
   LoginResponse,
@@ -16,7 +17,7 @@ export default class LoginService implements ILoginUseCase {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly encryptionService: IEncryptionService,
-    private readonly jsonWebTokenService: JsonWebTokenService,
+    private readonly jsonWebTokenService: IJwtTokenService,
   ) {}
   async execute(param: LoginParam): AsyncResult<AppException, LoginResponse> {
     try {
@@ -42,10 +43,12 @@ export default class LoginService implements ILoginUseCase {
       const acessToken = await this.jsonWebTokenService.sign({
         sub: userFinder.value.id,
         type: 'access',
+        jit: crypto.randomUUID(),
       });
       const refreshToken = await this.jsonWebTokenService.sign({
         sub: userFinder.value.id,
         type: 'refresh',
+        jit: crypto.randomUUID(),
       });
 
       return right(

@@ -1,12 +1,12 @@
 import ErrorMessages from '@/core/constants/error_messages';
 import JsonWebServiceException from '@/core/exceptions/json_web_service.exception';
-import { JwtSignPayload, JwtVerifyPayload } from '@/core/interface/jwt.payload';
 import ConfigurationService from '@/core/services/configuration.service';
-import { Injectable } from '@nestjs/common';
+import IJwtTokenService from '@/modules/auth/adapters/jwt_token_service.interface';
+import JwtSignPayload from '@/modules/auth/domain/entities/jwt_sign_payload';
+import JwtVerifyPayload from '@/modules/auth/domain/entities/jwt_verify_payload';
 import { JwtService } from '@nestjs/jwt';
 
-@Injectable()
-export default class JsonWebTokenService {
+export default class JsonWebTokenService implements IJwtTokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configurationService: ConfigurationService,
