@@ -3,6 +3,7 @@ import ConfigurationService from '@/core/services/configuration.service';
 import AuthModule from '@/modules/auth/auth.module';
 import UsersModule from '@/modules/users/users.module';
 import { Module } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,6 +23,31 @@ import { AppService } from './app.service';
         entities: [__dirname + '/**/*.model{.ts,.js}'],
         logging: ['error'],
         synchronize: true,
+      }),
+    }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => ({
+        throttlers:
+          configurationService.get('NODE_ENV') === 'dev'
+            ? []
+            : [
+                {
+                  name: 'short',
+                  ttl: 1000,
+                  limit: 3,
+                },
+                {
+                  name: 'medium',
+                  ttl: 10000,
+                  limit: 20,
+                },
+                {
+                  name: 'long',
+                  ttl: 60000,
+                  limit: 100,
+                },
+              ],
       }),
     }),
     CoreModule,
