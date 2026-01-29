@@ -23,7 +23,7 @@ export default class LoginService implements ILoginUseCase {
     try {
       const userFinder = await this.userRepository.findOne({
         userEmail: param.email,
-        selectFields: ['id', 'password', 'name', 'email'],
+        selectFields: ['id', 'password', 'name', 'email', 'role'],
       });
 
       if (userFinder.isLeft()) {
@@ -44,11 +44,13 @@ export default class LoginService implements ILoginUseCase {
         sub: userFinder.value.id,
         type: 'access',
         jit: crypto.randomUUID(),
+        role: userFinder.value.role,
       });
       const refreshToken = await this.jsonWebTokenService.sign({
         sub: userFinder.value.id,
         type: 'refresh',
         jit: crypto.randomUUID(),
+        role: userFinder.value.role,
       });
 
       return right(

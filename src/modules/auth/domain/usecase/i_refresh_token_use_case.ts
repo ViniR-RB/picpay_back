@@ -5,7 +5,7 @@ export default interface IRefreshTokenUseCase
   extends UseCase<RefreshTokenParam, RefreshTokenResponse> {}
 
 export class RefreshTokenParam {
-  constructor(public readonly sub: number) {}
+  constructor(public readonly sub: string) {}
 }
 
 export class RefreshTokenResponse {
