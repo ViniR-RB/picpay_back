@@ -23,6 +23,7 @@ export default class CreateUserService implements ICreateUserUseCase {
     try {
       const userExists = await this.userRepository.findOne({
         userEmail: param.email,
+        userDocument: param.document,
       });
 
       if (userExists.isRight()) {

@@ -5,4 +5,5 @@ export interface UserQueryOptions {
   relations?: string[];
   userId?: string;
   userEmail?: string;
+  userDocument?: string;
 }
