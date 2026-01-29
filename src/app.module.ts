@@ -26,6 +26,7 @@ import { AppService } from './app.service';
       }),
     }),
     ThrottlerModule.forRootAsync({
+      imports: [CoreModule],
       inject: [ConfigurationService],
       useFactory: (configurationService: ConfigurationService) => ({
         throttlers:
