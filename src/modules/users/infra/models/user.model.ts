@@ -16,6 +16,12 @@ export default class UserModel extends BaseModelPrimaryColumnUuid {
   @Column({ name: 'role', enum: UserRole, type: 'enum' })
   role: UserRole;
 
-  @Column({ name: 'document', unique: true, length: 14, nullable: true })
+  @Column({
+    name: 'document',
+    type: 'varchar',
+    unique: true,
+    length: 14,
+    nullable: true,
+  })
   document: string | null;
 }
