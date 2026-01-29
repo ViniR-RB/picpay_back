@@ -5,7 +5,7 @@ export default interface IExtractUserUseCase
   extends UseCase<ExtractUserParam, ExtractUserResponse> {}
 
 export class ExtractUserParam {
-  constructor(public readonly userId: number) {}
+  constructor(public readonly userId: string) {}
 }
 
 export class ExtractUserResponse {

@@ -1,3 +1,4 @@
+import { Roles } from '@/core/decorators/role.decorator';
 import { User } from '@/core/decorators/user_request.decorator';
 import AuthGuard from '@/core/guard/auth.guard';
 import ILoginUseCase, {
@@ -8,11 +9,14 @@ import IRefreshTokenUseCase, {
 } from '@/modules/auth/domain/usecase/i_refresh_token_use_case';
 import Credentials from '@/modules/auth/dtos/credentials';
 import { LOGIN_SERVICE, REFRESH_TOKEN_SERVICE } from '@/modules/auth/symbols';
+import { UserRole } from '@/modules/users/domain/entities/user.entity';
 import ICreateUserUseCase, {
   CreateUserParam,
 } from '@/modules/users/domain/usecase/i_create_user_use_case';
 import CreateUserDto from '@/modules/users/dtos/create_user.dto';
+import CreateUserMerchantDto from '@/modules/users/dtos/create_user_merchant.dto';
 import UserDto from '@/modules/users/dtos/user.dto';
+import UserExcludePasswordDto from '@/modules/users/dtos/user_exclude_password.dto';
 import { CREATE_USER_SERVICE } from '@/modules/users/symbols';
 import {
   Body,
@@ -25,6 +29,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 
 @Controller('api/auth')
 export default class AuthController {
@@ -37,21 +42,46 @@ export default class AuthController {
     private readonly refreshTokenService: IRefreshTokenUseCase,
   ) {}
 
-  @Post('/register')
+  @Post('/register-user')
   async createRegister(@Body() createUserDto: CreateUserDto) {
     const param = new CreateUserParam(
       createUserDto.name,
       createUserDto.email,
       createUserDto.password,
+      createUserDto.role,
+      createUserDto.document,
     );
+
     const result = await this.createUserService.execute(param);
     if (result.isLeft()) {
       throw new HttpException(result.value.message, result.value.statusCode, {
         cause: result.value.cause,
       });
     }
-    return result.value.fromResponse();
+    return plainToClass(UserExcludePasswordDto, result.value.fromResponse());
   }
+
+  @UseGuards(AuthGuard)
+  @Roles(UserRole.ADMIN)
+  @Post('/register-merchant')
+  async createRegisterMerchant(@Body() createUserDto: CreateUserMerchantDto) {
+    const param = new CreateUserParam(
+      createUserDto.name,
+      createUserDto.email,
+      createUserDto.password,
+      createUserDto.role,
+      createUserDto.document,
+    );
+
+    const result = await this.createUserService.execute(param);
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, result.value.statusCode, {
+        cause: result.value.cause,
+      });
+    }
+    return plainToClass(UserExcludePasswordDto, result.value.fromResponse());
+  }
+
   @Post('/login')
   async login(@Body() credentials: Credentials) {
     const param = new LoginParam(credentials.email, credentials.password);
