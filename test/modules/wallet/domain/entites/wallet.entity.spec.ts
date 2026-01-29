@@ -1,4 +1,4 @@
-import AmoutValueObject from '@/core/value_objects/amout_value_object';
+import AmountValueObject from '@/core/value_objects/amout_value_object';
 import WalletEntity from '@/modules/wallet/domain/entities/wallet.entity';
 import { VALID_WALLET_PROPS } from '@test/constants/wallet.constants';
 
@@ -18,7 +18,7 @@ describe('WalletEntity', () => {
     // Arrange
     const props = { ...VALID_WALLET_PROPS };
     const wallet = WalletEntity.create(props);
-    const transferAmount = AmoutValueObject.fromCents(5000); // 50 reais
+    const transferAmount = AmountValueObject.fromCents(5000); // 50 reais
     const oldUpdatedAt = wallet.updatedAt;
     // Act
     wallet.transfer(transferAmount);
