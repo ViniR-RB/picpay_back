@@ -1,6 +1,7 @@
 import { BaseModelPrimaryColumnUuid } from '@/core/interface/base_model';
 import { UserRole } from '@/modules/users/domain/entities/user.entity';
-import { Column, Entity } from 'typeorm';
+import WalletModel from '@/modules/wallet/infra/models/wallet.model';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity({ name: 'users' })
 export default class UserModel extends BaseModelPrimaryColumnUuid {
@@ -24,4 +25,8 @@ export default class UserModel extends BaseModelPrimaryColumnUuid {
     nullable: true,
   })
   document: string | null;
+
+  @OneToOne(() => WalletModel, wallet => wallet.user, { nullable: true })
+  @JoinColumn({ name: 'walletId' })
+  wallet: WalletModel;
 }
