@@ -1,8 +1,9 @@
 import CoreModule from '@/core/core_module';
+import IUnitOfWork from '@/core/interface/i_unit_of_work';
+import { UNIT_OF_WORK } from '@/core/symbols';
 import IEncryptionService from '@/modules/auth/adapters/encryption_service.interface';
 import AuthModule from '@/modules/auth/auth.module';
 import { ENCRYPTION_SERVICE } from '@/modules/auth/symbols';
-import IUserRepository from '@/modules/users/adapters/i_user.repository';
 import CreateUserService from '@/modules/users/application/create_user.service';
 import UserModel from '@/modules/users/infra/models/user.model';
 import UserRepository from '@/modules/users/infra/repositories/user.repository';
@@ -25,29 +26,12 @@ import { Repository } from 'typeorm';
         new UserRepository(userRepository),
     },
     {
-      inject: [USER_REPOSITORY, ENCRYPTION_SERVICE],
+      inject: [UNIT_OF_WORK, ENCRYPTION_SERVICE],
       provide: CREATE_USER_SERVICE,
-      useFactory: (
-        userRepository: IUserRepository,
-        encryption: IEncryptionService,
-      ) => new CreateUserService(userRepository, encryption),
+      useFactory: (unitOfWork: IUnitOfWork, encryption: IEncryptionService) =>
+        new CreateUserService(encryption, unitOfWork),
     },
   ],
-  exports: [
-    {
-      inject: [USER_REPOSITORY, ENCRYPTION_SERVICE],
-      provide: CREATE_USER_SERVICE,
-      useFactory: (
-        userRepository: IUserRepository,
-        encryption: IEncryptionService,
-      ) => new CreateUserService(userRepository, encryption),
-    },
-    {
-      inject: [getRepositoryToken(UserModel)],
-      provide: USER_REPOSITORY,
-      useFactory: (userRepository: Repository<UserModel>) =>
-        new UserRepository(userRepository),
-    },
-  ],
+  exports: [CREATE_USER_SERVICE, USER_REPOSITORY],
 })
 export default class UsersModule {}
