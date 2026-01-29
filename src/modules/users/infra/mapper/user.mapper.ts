@@ -9,6 +9,8 @@ export default abstract class UserMapper extends BaseMapper<UserEntity, UserMode
       password: userModel.password,
       email: userModel.email,
       name: userModel.name,
+      document: userModel.document,
+      role: userModel.role,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
     });

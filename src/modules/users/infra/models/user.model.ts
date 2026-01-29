@@ -1,16 +1,9 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseModelPrimaryColumnUuid } from '@/core/interface/base_model';
+import { UserRole } from '@/modules/users/domain/entities/user.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity({ name: 'users' })
-export default class UserModel {
-  @PrimaryGeneratedColumn('increment')
-  id: number;
-
+export default class UserModel extends BaseModelPrimaryColumnUuid {
   @Column({ name: 'password', select: false })
   password: string;
 
@@ -20,9 +13,9 @@ export default class UserModel {
   @Column({ name: 'name' })
   name: string;
 
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  @Column({ name: 'role', enum: UserRole, type: 'enum' })
+  role: UserRole;
 
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  @Column({ name: 'document', unique: true, length: 14, nullable: true })
+  document: string | null;
 }
