@@ -1,9 +1,9 @@
-import AmoutValueObject from '@/core/value_objects/amout_value_object';
+import AmountValueObject from '@/core/value_objects/amout_value_object';
 import { randomUUID } from 'crypto';
 
 export interface WalletEntityProps {
   id: string;
-  amount: AmoutValueObject;
+  amount: AmountValueObject;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -30,7 +30,7 @@ export default class WalletEntity {
     const now = new Date();
     const propsForCreation: WalletEntityProps = {
       id: props.id || randomUUID(),
-      amount: AmoutValueObject.fromCents(props.amount),
+      amount: AmountValueObject.fromCents(props.amount),
       createdAt: now,
       updatedAt: now,
       userId: props.userId,
@@ -43,7 +43,7 @@ export default class WalletEntity {
     return new WalletEntity(props);
   }
 
-  transfer(amount: AmoutValueObject) {
+  transfer(amount: AmountValueObject) {
     this.props.amount = this.amount.subtract(amount);
     this.toTouch();
   }

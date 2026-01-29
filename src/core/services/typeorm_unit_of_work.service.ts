@@ -1,15 +1,25 @@
 import IUnitOfWork from '@/core/interface/i_unit_of_work';
 import IUserRepository from '@/modules/users/adapters/i_user.repository';
 import UserRepository from '@/modules/users/infra/repositories/user.repository';
+import IWalletRepository from '@/modules/wallet/adapters/i_wallet.repository';
+import WalletRepository from '@/modules/wallet/infra/repositories/wallet.repository';
 import { DataSource, QueryRunner } from 'typeorm';
 
 export default class TypeormUnitOfWork implements IUnitOfWork {
   private queryRunner: QueryRunner;
   constructor(private dataSource: DataSource) {}
-  getUserRepository(): IUserRepository {
+  getWalletRepository(): IWalletRepository {
     if (!this.queryRunner || !this.queryRunner.manager) {
       throw new Error(
         'Transaction not started. Call start() first when getWalletRepository',
+      );
+    }
+    return new WalletRepository(this.queryRunner.manager);
+  }
+  getUserRepository(): IUserRepository {
+    if (!this.queryRunner || !this.queryRunner.manager) {
+      throw new Error(
+        'Transaction not started. Call start() first when getUserRepository',
       );
     }
     return new UserRepository(this.queryRunner.manager);
