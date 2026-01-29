@@ -11,14 +11,17 @@ import {
 import UserMapper from '@/modules/users/infra/mapper/user.mapper';
 import UserModel from '@/modules/users/infra/models/user.model';
 import { UserQueryOptions } from '@/modules/users/infra/query/query_objects';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { EntityManager, EntityNotFoundError, Repository } from 'typeorm';
 
 export default class UserRepository implements IUserRepository {
-  constructor(
-    @InjectRepository(UserModel)
-    private userRepository: Repository<UserModel>,
-  ) {}
+  private readonly userRepository: Repository<UserModel>;
+  constructor(repoOrManager: Repository<UserModel> | EntityManager) {
+    if (repoOrManager instanceof EntityManager) {
+      this.userRepository = repoOrManager.getRepository(UserModel);
+    } else {
+      this.userRepository = repoOrManager;
+    }
+  }
   create(entity: UserEntity): UserModel {
     const userModel = this.userRepository.create(UserMapper.toModel(entity));
     return userModel;
