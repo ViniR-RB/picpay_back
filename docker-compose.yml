@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nest-dev:
-    container_name: base_api
+    container_name: picpay_back
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -18,7 +18,7 @@ services:
       - postgres
 
   postgres:
-    container_name: base-postgres
+    container_name: picpay_postgres
     image: postgres:16-alpine
     restart: always
     ports:
