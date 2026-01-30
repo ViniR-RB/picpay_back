@@ -47,6 +47,10 @@ export default class WalletEntity {
     this.props.amount = this.amount.subtract(amount);
     this.toTouch();
   }
+  recive(amount: AmountValueObject) {
+    this.props.amount = this.amount.add(amount);
+    this.toTouch();
+  }
 
   private toTouch() {
     this.props.updatedAt = new Date();
