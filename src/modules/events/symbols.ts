@@ -1,0 +1,3 @@
+export const EVENT_REPOSITORY = Symbol('EVENT_REPOSITORY');
+export const EVENT_PROCESSOR = Symbol('EVENT_PROCESSOR');
+export const CREATE_EVENT_SERVICE = Symbol('CREATE_EVENT_SERVICE');
