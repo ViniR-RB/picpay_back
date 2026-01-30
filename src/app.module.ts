@@ -2,6 +2,7 @@ import CoreModule from '@/core/core_module';
 import ConfigurationService from '@/core/services/configuration.service';
 import AuthModule from '@/modules/auth/auth.module';
 import UsersModule from '@/modules/users/users.module';
+import WalletModule from '@/modules/wallet/wallet.module';
 import { Module } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -54,6 +55,7 @@ import { AppService } from './app.service';
     CoreModule,
     UsersModule,
     AuthModule,
+    WalletModule,
   ],
   controllers: [AppController],
   providers: [AppService],
